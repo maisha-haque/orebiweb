@@ -1,38 +1,42 @@
-import React from 'react'
-import Container from '../common/Container'
-import Flex from '../common/Flex'
-import Product from '../common/Product'
-import productoneb from '/src/assets/productoneb.png'
-import producttwob from '/src/assets/producttwob.png'
-import productthreeb from '/src/assets/productthreeb.png'
-import productfourb from '/src/assets/productfourb.png'
+import React, { useState, useEffect } from 'react';
+import Container from '../common/Container';
+import Product from '../common/Product';
+import { fetchProducts } from '../services/api';
+import { FaSpinner } from 'react-icons/fa';
 
 const Bestseller = () => {
+  const [bestsellers, setBestsellers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts(8, 10)
+      .then(res => setBestsellers(res.products.slice(0, 4)))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-       <>
+    <section className="py-10 bg-white dark:bg-zinc-950 transition-colors">
+      <Container>
+        <h2 className="font-bold text-2xl sm:text-3xl text-gray-900 dark:text-zinc-100 mt-6 mb-8">
+          Our Bestsellers
+        </h2>
 
-        <div className="py-7">
-        <Container>
-            <h2 className={"font-bold text-3xl mt-12 mb-8"}>Our Bestsellers</h2>
+        {loading ? (
+          <div className="py-12 text-center text-gray-500">
+            <FaSpinner className="animate-spin text-2xl mx-auto mb-2" />
+            <p className="text-xs">Loading bestsellers...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {bestsellers.map((product) => (
+              <Product key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </Container>
+    </section>
+  );
+};
 
-            <Flex className={"gap-x-3.5"}>
-                <div className="w-1/4">
-                    <Product productimg={productoneb} badgeT={"New"} proTitle={"Basic Crew Neck Tee"} proprice={"$44.00"}/>
-                </div>
-                <div className="w-1/4">
-                    <Product productimg={producttwob} badgeT={"New"} proTitle={"Basic Crew Neck Tee"} proprice={"$44.00"}/>
-                </div>
-                <div className="w-1/4">
-                    <Product productimg={productthreeb} badgeT={"New"} proTitle={"Basic Crew Neck Tee"} proprice={"$44.00"}/>
-                </div>
-                <div className="w-1/4">
-                    <Product productimg={productfourb} badgeT={"New"} proTitle={"Basic Crew Neck Tee"} proprice={"$44.00"}/>
-                </div>
-            </Flex>
-        </Container>
-     </div>
-   </>
-  )
-}
-
-export default Bestseller
+export default Bestseller;
