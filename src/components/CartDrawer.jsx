@@ -2,10 +2,11 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, updateQuantity, clearCart } from '../features/cart/cartSlice';
 import { FaTrash, FaTimes, FaMinus, FaPlus, FaShoppingBag } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const CartDrawer = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { items, totalAmount } = useSelector((state) => state.cart);
 
   if (!isOpen) return null;
@@ -121,8 +122,11 @@ const CartDrawer = ({ isOpen, onClose }) => {
 
               <div className="space-y-2 pt-2">
                 <button 
-                  onClick={() => alert("Checkout system is ready! Proceeding to payment demo.")}
-                  className="w-full py-3 bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-center block uppercase tracking-wider"
+                  onClick={() => {
+                    onClose();
+                    navigate('/checkout');
+                  }}
+                  className="w-full py-3 bg-black dark:bg-white text-white dark:text-black font-semibold text-sm hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-center block uppercase tracking-wider cursor-pointer"
                 >
                   Proceed to Checkout
                 </button>

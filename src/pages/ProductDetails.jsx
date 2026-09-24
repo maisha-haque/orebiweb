@@ -6,6 +6,7 @@ import { fetchProductById, fetchProductsByCategory } from '../services/api';
 import { useDispatch, useSelector } from 'react-redux';
 import { addToCart } from '../features/cart/cartSlice';
 import { toggleWishlist } from '../features/wishlist/wishlistSlice';
+import { toggleCompare } from '../features/compare/compareSlice';
 import { 
   FaStar, 
   FaHeart, 
@@ -27,6 +28,7 @@ const ProductDetails = ({ onOpenCart }) => {
   const dispatch = useDispatch();
 
   const wishlistItems = useSelector((state) => state.wishlist.items);
+  const compareItems = useSelector((state) => state.compare?.items || []);
 
   const [product, setProduct] = useState(null);
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -82,7 +84,7 @@ const ProductDetails = ({ onOpenCart }) => {
       <div className="py-24 text-center min-h-screen bg-white dark:bg-zinc-950">
         <FaSpinner className="animate-spin text-3xl text-gray-500 mx-auto mb-3" />
         <p className="text-sm font-semibold text-gray-600 dark:text-zinc-400">
-          Fetching product details from DummyJSON API...
+          Fetching product details...
         </p>
       </div>
     );
@@ -100,6 +102,7 @@ const ProductDetails = ({ onOpenCart }) => {
   }
 
   const isInWishlist = wishlistItems.some(item => String(item.id) === String(product.id));
+  const isInCompare = compareItems.some(item => String(item.id) === String(product.id));
 
   const handleMouseMove = (e) => {
     if (!imageContainerRef.current) return;
@@ -305,8 +308,12 @@ const ProductDetails = ({ onOpenCart }) => {
                   <FaHeart className={isInWishlist ? 'text-red-500' : ''} />
                   <span>{isInWishlist ? 'In Wishlist' : 'Add to Wishlist'}</span>
                 </button>
-                <button onClick={() => alert("Added to Compare!")} className="flex items-center gap-1.5 hover:text-black dark:hover:text-white transition-colors font-medium">
-                  <FaExchangeAlt /> Compare Product
+                <button 
+                  onClick={() => dispatch(toggleCompare(product))} 
+                  className={`flex items-center gap-1.5 font-medium transition-colors ${isInCompare ? 'text-black dark:text-white font-bold' : 'hover:text-black dark:hover:text-white'}`}
+                >
+                  <FaExchangeAlt className={isInCompare ? 'rotate-180 transition-transform' : ''} />
+                  <span>{isInCompare ? 'In Compare' : 'Compare Product'}</span>
                 </button>
               </div>
             </div>
@@ -428,7 +435,7 @@ const ProductDetails = ({ onOpenCart }) => {
         {/* Related Products Section */}
         {relatedProducts.length > 0 && (
           <div className="mt-20 border-t border-gray-200 dark:border-zinc-800 pt-12">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100 mb-8">Related API Products</h2>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-zinc-100 mb-8">Related Products</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
               {relatedProducts.map((relProduct) => (
                 <Product key={relProduct.id} product={relProduct} />

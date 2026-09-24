@@ -85,7 +85,7 @@ const User = () => {
     setTimeout(() => setNotification(''), 3000);
   };
 
-  // Mock Orders Data
+  // Mock Orders Data + Placed Orders
   const mockOrders = [
     {
       id: 'ORD-89214',
@@ -101,6 +101,25 @@ const User = () => {
       total: '$85.50',
       itemsCount: 2
     }
+  ];
+
+  const savedOrders = (() => {
+    try {
+      return JSON.parse(localStorage.getItem('orebi_orders') || '[]');
+    } catch {
+      return [];
+    }
+  })();
+
+  const allOrders = [
+    ...savedOrders.map(o => ({
+      id: o.id,
+      date: o.date,
+      status: 'Processing',
+      total: `$${typeof o.total === 'number' ? o.total.toFixed(2) : o.total}`,
+      itemsCount: o.items?.length || 1
+    })),
+    ...mockOrders
   ];
 
   return (
@@ -271,7 +290,7 @@ const User = () => {
                   </div>
 
                   <div className="space-y-4">
-                    {mockOrders.map((order) => (
+                    {allOrders.map((order) => (
                       <div key={order.id} className="p-4 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div>
                           <div className="flex items-center gap-2">

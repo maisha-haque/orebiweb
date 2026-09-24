@@ -18,6 +18,7 @@ import {
 import Images from '../common/Images';
 import logo from '/src/assets/logo.png';
 import { useSelector } from 'react-redux';
+import { TbRefresh } from 'react-icons/tb';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
 import { fetchCategories, searchProducts } from '../services/api';
@@ -27,6 +28,7 @@ const Header = ({ onOpenCart }) => {
   const { user, logout, isAuthenticated } = useAuth();
   const cartCount = useSelector((state) => state.cart.value);
   const wishlistCount = useSelector((state) => state.wishlist.value);
+  const compareCount = useSelector((state) => state.compare?.value || 0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -210,6 +212,13 @@ const Header = ({ onOpenCart }) => {
                         >
                           <FaHeart className="inline mr-2 text-red-500" /> Wishlist ({wishlistCount})
                         </Link>
+                        <Link
+                          to="/compare"
+                          onClick={() => setIsUserMenuOpen(false)}
+                          className="block px-4 py-2 text-xs text-gray-700 dark:text-zinc-300 hover:bg-gray-50 dark:hover:bg-zinc-800"
+                        >
+                          <TbRefresh className="inline mr-2 text-gray-600 dark:text-zinc-400" /> Compare ({compareCount})
+                        </Link>
                         <button
                           onClick={() => { logout(); setIsUserMenuOpen(false); navigate('/user'); }}
                           className="w-full text-left px-4 py-2 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-zinc-800 flex items-center gap-2 border-t border-gray-100 dark:border-zinc-800 mt-1"
@@ -247,6 +256,21 @@ const Header = ({ onOpenCart }) => {
                 {wishlistCount > 0 && (
                   <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border border-white dark:border-zinc-900">
                     {wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Compare Icon with Badge */}
+              <Link
+                to="/compare"
+                className="relative p-1.5 text-gray-700 dark:text-zinc-200 hover:text-black dark:hover:text-white transition-colors"
+                title="Compare Products"
+                aria-label="Compare"
+              >
+                <TbRefresh className="text-xl" />
+                {compareCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-black dark:bg-white text-white dark:text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border border-white dark:border-zinc-900">
+                    {compareCount}
                   </span>
                 )}
               </Link>

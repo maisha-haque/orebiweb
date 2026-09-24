@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromCart, updateQuantity, clearCart } from '../features/cart/cartSlice';
 import Container from '../common/Container';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaShoppingBag, FaTrash, FaMinus, FaPlus, FaChevronRight, FaTag } from 'react-icons/fa';
 
 const Cart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { items, totalAmount } = useSelector((state) => state.cart);
   const [couponCode, setCouponCode] = useState('');
   const [discount, setDiscount] = useState(0);
@@ -217,8 +218,8 @@ const Cart = () => {
               </div>
 
               <button
-                onClick={() => alert("Payment Gateway Demo: Order placed successfully!")}
-                className="w-full py-3.5 bg-black text-white dark:bg-white dark:text-black font-bold text-xs uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-center block"
+                onClick={() => navigate('/checkout')}
+                className="w-full py-3.5 bg-black text-white dark:bg-white dark:text-black font-bold text-xs uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors text-center block cursor-pointer"
               >
                 Proceed to Checkout
               </button>

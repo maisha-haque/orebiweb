@@ -157,7 +157,7 @@ const Shop = () => {
       <Container>
         {/* Breadcrumb Header */}
         <div className="mb-8">
-          <h1 className="font-bold text-3xl text-gray-900 dark:text-zinc-100">DummyJSON Product Catalog</h1>
+          <h1 className="font-bold text-3xl text-gray-900 dark:text-zinc-100">Product Catalog</h1>
           <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-zinc-400 mt-2">
             <Link to="/" className="hover:underline">Home</Link>
             <FaChevronRight className="text-[9px]" />
@@ -204,7 +204,7 @@ const Shop = () => {
             </div>
 
             <p className="text-xs text-gray-500 dark:text-zinc-400">
-              Showing <span className="font-semibold text-gray-800 dark:text-zinc-200">{filteredProducts.length}</span> API products
+              Showing <span className="font-semibold text-gray-800 dark:text-zinc-200">{filteredProducts.length}</span> products
             </p>
           </div>
 
@@ -371,7 +371,7 @@ const Shop = () => {
               <div className="py-24 text-center">
                 <FaSpinner className="animate-spin text-3xl text-gray-500 mx-auto mb-3" />
                 <p className="text-sm font-semibold text-gray-600 dark:text-zinc-400">
-                  Loading DummyJSON API products...
+                  Loading products...
                 </p>
               </div>
             ) : paginatedProducts.length === 0 ? (

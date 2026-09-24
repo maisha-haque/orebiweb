@@ -8,7 +8,9 @@ import Shop from './pages/Shop';
 import Contact from './pages/Contact';
 import ProductDetails from './pages/ProductDetails';
 import Wishlist from './pages/Wishlist';
+import Compare from './pages/Compare';
 import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import User from './pages/User';
@@ -37,7 +39,9 @@ function App() {
             <Route path="shop" element={<Shop />} />
             <Route path="product/:id" element={<ProductDetails />} />
             <Route path="wishlist" element={<Wishlist />} />
+            <Route path="compare" element={<Compare />} />
             <Route path="cart" element={<Cart />} />
+            <Route path="checkout" element={<Checkout />} />
             <Route path="user" element={<User />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />

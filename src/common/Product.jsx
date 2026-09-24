@@ -8,13 +8,17 @@ import { FaShoppingCart, FaCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../features/cart/cartSlice";
 import { toggleWishlist } from "../features/wishlist/wishlistSlice";
+import { toggleCompare } from "../features/compare/compareSlice";
 import { Link } from 'react-router-dom';
 
 const Product = ({ productimg, badgeT, proTitle, proprice, id, product }) => {
   const dispatch = useDispatch();
   const [addedToast, setAddedToast] = useState(false);
+  const [compareToast, setCompareToast] = useState(false);
+  const [compareToastMsg, setCompareToastMsg] = useState('');
 
   const wishlistItems = useSelector((state) => state.wishlist.items);
+  const compareItems = useSelector((state) => state.compare?.items || []);
 
   // Extract properties whether passed as single object or individual props
   const pId = String(product?.id || id || `p-${Date.now()}`);
@@ -26,6 +30,7 @@ const Product = ({ productimg, badgeT, proTitle, proprice, id, product }) => {
   const badgeText = product?.badge || badgeT || 'New';
 
   const isInWishlist = wishlistItems.some((item) => String(item.id) === pId);
+  const isInCompare = compareItems.some((item) => String(item.id) === pId);
 
   const productObj = product || {
     id: pId,
@@ -56,7 +61,11 @@ const Product = ({ productimg, badgeT, proTitle, proprice, id, product }) => {
   const handleCompare = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    alert(`Added "${title}" to Compare list!`);
+    dispatch(toggleCompare(productObj));
+    const willBeIn = !isInCompare;
+    setCompareToastMsg(willBeIn ? 'Added to Compare' : 'Removed from Compare');
+    setCompareToast(true);
+    setTimeout(() => setCompareToast(false), 2500);
   };
 
   return (
@@ -66,6 +75,16 @@ const Product = ({ productimg, badgeT, proTitle, proprice, id, product }) => {
         <div className="absolute top-2 right-2 z-30 bg-black text-white dark:bg-white dark:text-black text-[11px] font-semibold px-2.5 py-1 rounded shadow-md flex items-center gap-1.5 animate-fadeIn">
           <FaCheck className="text-green-400 dark:text-green-600 text-xs" />
           <span>Added to Cart</span>
+        </div>
+      )}
+
+      {/* Toast alert when added/removed from compare */}
+      {compareToast && (
+        <div className="absolute top-2 right-2 z-30 bg-black text-white dark:bg-white dark:text-black text-[11px] font-semibold px-2.5 py-1.5 rounded shadow-md flex items-center gap-2 animate-fadeIn">
+          <span>{compareToastMsg}</span>
+          <Link to="/compare" onClick={(e) => e.stopPropagation()} className="underline font-bold text-amber-300 dark:text-amber-500 hover:opacity-80">
+            View
+          </Link>
         </div>
       )}
 
@@ -110,10 +129,15 @@ const Product = ({ productimg, badgeT, proTitle, proprice, id, product }) => {
 
           <div 
             onClick={handleCompare}
-            className="flex items-center justify-end gap-x-2 cursor-pointer text-gray-600 dark:text-zinc-300 hover:text-black dark:hover:text-white transition-colors"
+            className={`flex items-center justify-end gap-x-2 cursor-pointer transition-colors ${
+              isInCompare 
+                ? 'text-black dark:text-white font-bold' 
+                : 'text-gray-600 dark:text-zinc-300 hover:text-black dark:hover:text-white'
+            }`}
+            title={isInCompare ? "Remove from Compare" : "Add to Compare"}
           >
-            <span className="text-xs font-medium">Compare</span>
-            <TbRefresh className="text-sm" />
+            <span className="text-xs font-medium">{isInCompare ? 'In Compare' : 'Compare'}</span>
+            <TbRefresh className={`text-sm ${isInCompare ? 'text-black dark:text-white font-bold' : ''}`} />
           </div>
 
           <div 
